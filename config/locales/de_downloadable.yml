@@ -1,0 +1,18 @@
+de: 
+  enabled: "Aktiviert"
+  title: "Titel"
+  downloadable_settings: "Downloadprodukt Einstellungen"
+  download_limit: "Downloadlimit"
+  downloadable_preferences: "Downloadprodukt Einstellungen"
+  unlimited: "Unbegrenzt"
+  limit: "Limit"
+  you_have_reached_your_download_limit: "Sie haben das Downloadlimit für diesen Artikel erreicht."
+  unauthorized_access: "Unberechtigter Zugriff"
+  create_zip: "Zip-Datei erstellen"
+  variant: "Variante"
+  filename(s): "Dateiname(n)"
+  download: "Download"
+  "Dear Customer": "Sehr geehrte Kundin, sehr geehrter Kunde,"
+  "Please find an invoice for your purchases below": "anbei finden Sie die Rechnung für die von Ihnen erworbenen Artikel."
+  "Invoice": "Rechnung"
+  'Thank you for your business': 'Vielen Dank für Ihren Einkauf.'
