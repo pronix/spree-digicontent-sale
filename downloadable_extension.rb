@@ -27,14 +27,14 @@ class DownloadableExtension < Spree::Extension
     end
     
     
-    Admin::BaseController.class_eval do 
-      before_filter :add_product_admin_tabs
+    # Admin::BaseController.class_eval do 
+    #   # before_filter :add_product_admin_tabs
       
-      # Insert downloadable link to admin product tabs
-      def add_product_admin_tabs
-        @product_admin_tabs << {:name => "Downloadables", :url => "admin_product_downloadables_url"}
-      end
-    end
+    #   # # Insert downloadable link to admin product tabs
+    #   # def add_product_admin_tabs
+    #   #   @product_admin_tabs << {:name => "Downloadables", :url => "admin_product_downloadables_url"}
+    #   # end
+    # end
     
     # ----------------------------------------------------------------------------------------------------------
     # Model class_evals 
