@@ -11,15 +11,27 @@ class DownloadableExtension < Spree::Extension
   end
   
   def activate
-    # Checkout.class_eval do
-    #   state_machine :initial => 'payment' do
-    #     after_transition :to => 'complete', :do => :complete_order
-    #     before_transition :to => 'complete', :do => :process_payment
-    #     event :next do
-    #       transition :to => 'complete', :from => 'payment'
-    #     end
-    #   end
-    # end
+    Checkout.state_machines[:state] = StateMachine::Machine.new(Checkout, :initial => 'payment') do
+      after_transition :to => 'complete', :do => :complete_order
+      before_transition :to => 'complete', :do => :process_payment
+      event :next do
+        transition :to => 'complete', :from => 'payment'
+      end
+    end
+    
+    CheckoutsController.class_eval do
+      def object
+        return @object if @object
+        @object = parent_object.checkout
+        unless params[:checkout] and params[:checkout][:coupon_code]
+          @object.creditcard ||= Creditcard.new(:month => Date.today.month, :year => Date.today.year)
+          @object.shipping_method ||= ShippingMethod.first
+        end
+        @object
+      end
+      
+    end  
+
     
     # Need a global peference for download limits
     AppConfiguration.class_eval do 
@@ -84,6 +96,14 @@ class DownloadableExtension < Spree::Extension
       
       # For url_for :host 
       default_url_options[:host] = Spree::Config[:site_url]
+    end
+    
+    ShippingMethod.class_eval do
+      class << self
+        def download
+          self.find_by_name('Download')
+        end
+      end
     end
     
     # ----------------------------------------------------------------------------------------------------------
