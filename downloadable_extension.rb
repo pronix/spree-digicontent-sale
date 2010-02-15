@@ -11,6 +11,16 @@ class DownloadableExtension < Spree::Extension
   end
   
   def activate
+    # Checkout.class_eval do
+    #   state_machine :initial => 'payment' do
+    #     after_transition :to => 'complete', :do => :complete_order
+    #     before_transition :to => 'complete', :do => :process_payment
+    #     event :next do
+    #       transition :to => 'complete', :from => 'payment'
+    #     end
+    #   end
+    # end
+    
     # Need a global peference for download limits
     AppConfiguration.class_eval do 
       preference :download_limit, :integer, :default => 0 # 0 for unlimited
