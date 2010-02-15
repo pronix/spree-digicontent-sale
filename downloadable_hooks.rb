@@ -10,4 +10,10 @@ class DownloadableHooks < Spree::ThemeSupport::HookListener
      </li>"
   end
   
+  # When product has a downloadables we render some slightly different
+  # html templates
+  replace :inside_product_cart_form, 'shared/show_price'
+  replace :cart_item_quantity, 'shared/cart_item_quanity'
+  
+  
 end
