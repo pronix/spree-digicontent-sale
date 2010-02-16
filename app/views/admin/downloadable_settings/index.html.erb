@@ -1,0 +1,18 @@
+<%= render :partial => 'admin/shared/configuration_menu' %>
+
+<h1><%= t("downloadable_settings") %></h1>
+
+<table class="index">
+  <tr>
+    <th><%= t 'name' %></th>
+    <th><%= t 'value' %></th>
+    <th><%= t 'action' %></th>
+  </tr>
+  <%- @available_fields.each do |field| -%>
+    <tr>
+      <td><%= field %></td>
+      <td><%= Spree::Config[field.to_sym] %></td>
+      <td><%= link_to t('edit'), edit_admin_downloadable_setting_path(:id => field) %></td>
+    </tr>
+  <%- end -%>
+</table>

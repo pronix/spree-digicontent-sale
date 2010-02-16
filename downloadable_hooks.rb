@@ -1,9 +1,9 @@
 class DownloadableHooks < Spree::ThemeSupport::HookListener
   # I think this is not necessary
-  # insert_after :admin_configurations_menu do
-  #   "<tr><td><%= link_to t(\"downloadable_settings\"), admin_downloadable_settings_path %></td><td>
-  #    <%= t(\"downloadable_settings_description\") %></td></tr>"
-  # end
+  insert_after :admin_configurations_menu do
+    "<tr><td><%= link_to t(\"downloadable_settings\"), admin_downloadable_settings_path %></td><td>
+     <%= t(\"downloadable_settings_description\") %></td></tr>"
+  end
 
   # Delete variants from admin product tabs
   # TODO: letter try to many varinants for one product, for example:

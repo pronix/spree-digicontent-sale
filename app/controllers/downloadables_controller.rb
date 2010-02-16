@@ -1,10 +1,4 @@
 class DownloadablesController < Spree::BaseController  
-  # require_user is a method in Application.rb
-  # disabled to enable downloads for non-members     
-  # before_filter :require_user, :only => :show
-  
-  ssl_required :show
-  
   def show
     item = LineItem.find(params[:id])
     if Digest::MD5.hexdigest("#{item.id}-#{ActionController::Base.session_options[:secret]}") != params[:s]

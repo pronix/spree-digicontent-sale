@@ -1,6 +1,9 @@
 map.namespace :admin do |admin|
   admin.resources :products, :has_many => [:downloadables]
-  admin.resource :downloadable_settings
+  admin.resources :downloadable_settings
 end  
 
-map.resources :downloadables
+map.download_file '/file/:secret/:filename', :controller => :downloadables,
+                                             :action => :show, 
+                                             :conditions => { :method => :get }
+# map.resources :downloadables

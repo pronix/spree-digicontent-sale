@@ -36,17 +36,18 @@ class DownloadableExtension < Spree::Extension
     # Need a global peference for download limits
     AppConfiguration.class_eval do 
       preference :download_limit, :integer, :default => 0 # 0 for unlimited
+      preference :link_ttl, :integer, :default => 24 # Download link ttl, 0 for unlimited
     end
     
     # Global/General Settings for all product downloads
-    Admin::ConfigurationsController.class_eval do
-      before_filter :add_product_download_settings_links, :only => :index
+    # Admin::ConfigurationsController.class_eval do
+    #   before_filter :add_product_download_settings_links, :only => :index
 
-      def add_product_download_settings_links
-        @extension_links << {:link => admin_downloadable_settings_path, :link_text => t('downloadable_settings'), 
-          :description => "Configure general product download settings."}
-      end
-    end
+    #   def add_product_download_settings_links
+    #     @extension_links << {:link => admin_downloadable_settings_path, :link_text => t('downloadable_settings'), 
+    #       :description => "Configure general product download settings."}
+    #   end
+    # end
     
     Admin::ProductsController.class_eval do
       after_filter :show_flash, :only => :edit
@@ -87,7 +88,6 @@ class DownloadableExtension < Spree::Extension
       # Insert download limit to line items for orders
       def add_download_limit
         use_global = false
-        
         if !self.variant.nil? and !self.variant.downloadables.empty?
           if self.variant.downloadables.first.download_limit.nil?
             use_global = true
