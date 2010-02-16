@@ -48,6 +48,15 @@ class DownloadableExtension < Spree::Extension
       end
     end
     
+    Admin::ProductsController.class_eval do
+      after_filter :show_flash, :only => :edit
+      
+      # Show notice when product don't hava a attached files
+      def show_flash
+        flash[:notice] = t('product_must_have_attached_file') if @product.downloadables.empty?
+      end
+    end
+    
     
     # ----------------------------------------------------------------------------------------------------------
     # Model class_evals 
