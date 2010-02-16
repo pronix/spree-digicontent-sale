@@ -32,11 +32,6 @@
         <% end %>
       <% end %>
       
-      <% f.field_container :download_limit do %>
-				<%= f.label :name, t("download_limit") %> <sup>Defaults to global settings if left blank.</sup><br/>
-				<%= f.text_field :download_limit, :size => 7 %>
-		  <% end %>
-      
       <p class="form-buttons">
         <%= button t("update") %>
         or <%= link_to t("cancel"), "#", :id => "cancel_link" %>

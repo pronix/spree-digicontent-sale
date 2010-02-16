@@ -26,17 +26,12 @@
 			<%= f.check_box :enabled %>
 	  <% end %>
 		  
-		  <% if @product.variants? %>
-        <%= f.label Variant.human_name + ": " %>
-        <%= f.select :viewable_id, @variants %>
-      <% else %>
-        <%= hidden_field_tag :product_id, @product.id %>
-      <% end %>
-      
-          <% f.field_container :download_limit do %>
-    				<%= f.label :name, t("download_limit") %> <sup>Defaults to global settings if left blank.</sup><br/>
-    				<%= f.text_field :download_limit, :size => 7 %>
-    		  <% end %>
+		<% if @product.variants? %>
+          <%= f.label Variant.human_name + ": " %>
+          <%= f.select :viewable_id, @variants %>
+        <% else %>
+          <%= hidden_field_tag :product_id, @product.id %>
+        <% end %>
       
       <p class="form-buttons">
         <%= button t("update") %>
