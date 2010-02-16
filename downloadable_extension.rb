@@ -77,6 +77,12 @@ class DownloadableExtension < Spree::Extension
     
     LineItem.class_eval do 
       before_create :add_download_limit
+      before_update :fix_quantity
+      
+      # Fuck, it's ugly, but I don't know how use it before_update {self.quantity = 1}
+      def fix_quantity
+        self.quantity = 1
+      end
       
       # Insert download limit to line items for orders
       def add_download_limit
