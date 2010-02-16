@@ -1,0 +1,7 @@
+taxonomy_mathematics:
+  id: 10
+  name: Mathematics
+  
+taxonomy_physics:
+  id: 11
+  name: Physics

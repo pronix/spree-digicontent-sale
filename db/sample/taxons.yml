@@ -1,0 +1,59 @@
+taxon_math:
+  id: 10
+  taxonomy_id: 10
+  position: 0
+  name: Mathematics
+  permalink: mathematics/
+  lft: 1
+  rgt: 12
+
+taxon_physics:
+  id: 11
+  taxonomy_id: 11
+  position: 0
+  name: Physics
+  permalink: physics/
+  lft: 1
+  rgt: 12
+
+taxon_math_general:
+  id: 12
+  name: General
+  permalink: mathematics/general
+  parent_id: 10
+  taxonomy_id: 10
+
+taxon_math_number_theory:
+  id: 13
+  name: Number theory
+  permalink: mathematics/number_theory
+  parent_id: 10
+  taxonomy_id: 10
+
+taxon_math_k_theory:
+  id: 14
+  name: K-theory
+  permalink: mathematics/k-theory
+  parent_id: 10
+  taxonomy_id: 10
+
+taxon_physics_astrophysics:
+  id: 15
+  name: Astrophysics
+  permalink: physics/astrophysics
+  parent_id: 11
+  taxonomy_id: 11
+
+taxon_physics_biophysics:
+  id: 16
+  name: Biophysics
+  permalink: physics/biophysics
+  parent_id: 11
+  taxonomy_id: 11
+
+taxon_physics_nuclear:
+  id: 17
+  name: Nuclear Physics
+  permalink: physics/nuclear
+  parent_id: 11
+  taxonomy_id: 11
