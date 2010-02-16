@@ -59,10 +59,11 @@
 	  <% if @product.has_variants? %>
 	    <th><%= Variant.human_name %></th>
 	  <% end %>
-		<th><%= t("filename(s)") %></th>
-		<th><%= t("description") %></th>
-		<th width="40px"><%= t("enabled") %></th>
-		<th width="120px"><%= t("action") %></th>
+	  <th><%= t("filename(s)") %></th>
+      <th><%= t("file_size") %></th>
+	  <th><%= t("description") %></th>
+	  <th width="40px"><%= t("enabled") %></th>
+	  <th width="120px"><%= t("action") %></th>
 	</tr>
   <% @product.downloadables.each do |downloadable| %>
     <tr>
@@ -70,6 +71,7 @@
         <td><%= t('all') %></td>
       <% end %>
       <td><%= link_to(downloadable.filename, downloadable.attachment.url(:product)) %></td>
+      <td><%= number_to_human_size downloadable.attachment.try(:size) %></td>
       <td><%= h(downloadable.description) %></td>
       <td><%= check_box_tag 'downloadable', 'enabled', downloadable.enabled, :disabled => true %></td>
       <td class="actions" style="padding:0px;">
