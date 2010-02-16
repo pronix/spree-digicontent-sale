@@ -40,7 +40,7 @@ class Downloadable < ProductDownload
                                             ["viewable_id = ? and attachment_content_type != ?", viewable_id, "application/zip"])
     
     if(variant_downloadable.size > 1)
-      bundle_filename = "#{variant_downloadable.first.viewable_id}_bundle.zip"
+      bundle_filename = "#{self.viewable.permalink}_archive.zip"
       bundle_fullpath = "#{RAILS_ROOT}/tmp/" + bundle_filename
       
        # Create the zip file
