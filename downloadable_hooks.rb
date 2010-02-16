@@ -4,11 +4,7 @@ class DownloadableHooks < Spree::ThemeSupport::HookListener
      <%= t(\"downloadable_settings_description\") %></td></tr>"
   end
   
-  insert_after :admin_product_tabs do
-    "<li<%= \' class=\"active\"\' if current == \"Downloadables\" %>>
-     <%= link_to t(\"product_files\"), admin_product_downloadables_path(@product) %>
-     </li>"
-  end
+  replace :admin_product_tabs, 'admin/shared/download_tabs'
   
   # When product has a downloadables we render some slightly different
   # html templates
