@@ -17,6 +17,7 @@ class DownloadableHooks < Spree::ThemeSupport::HookListener
   # html templates
   replace :inside_product_cart_form, 'shared/show_price'
   replace :cart_item_quantity, 'shared/cart_item_quanity'
-  
+
+  remove :cart_item_quantity
   
 end
