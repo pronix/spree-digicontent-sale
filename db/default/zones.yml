@@ -1,0 +1,4 @@
+zone_internet:
+  id: 13
+  name: Internet
+  description: Use for downloading files

@@ -25,7 +25,7 @@ class DownloadableExtension < Spree::Extension
         @object = parent_object.checkout
         unless params[:checkout] and params[:checkout][:coupon_code]
           @object.creditcard ||= Creditcard.new(:month => Date.today.month, :year => Date.today.year)
-          @object.shipping_method ||= ShippingMethod.first
+          @object.shipping_method ||= ShippingMethod.download
         end
         @object
       end
