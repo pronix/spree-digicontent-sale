@@ -63,7 +63,11 @@ class DownloadableExtension < Spree::Extension
     # ----------------------------------------------------------------------------------------------------------
     
     Product.class_eval do 
-       has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
+      has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
+      
+      # ReWrite a named_scope, now he selects on product who has files.
+      named_scope :available, :conditions => ["products.available_on <= ? 
+                                               AND products.id IN (SELECT viewable_id FROM product_downloads)", Time.zone.now]
     end
     
     Variant.class_eval do 
