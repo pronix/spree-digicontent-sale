@@ -1,6 +1,3 @@
-# require_dependency 'application'
-#require_dependency 'application_controller'
-
 class DownloadableExtension < Spree::Extension
   version "1.1"
   description "Downloadable products"
@@ -31,23 +28,12 @@ class DownloadableExtension < Spree::Extension
         @object
       end
     end  
-
     
     # Need a global peference for download limits
     AppConfiguration.class_eval do 
       preference :download_limit, :integer, :default => 0 # 0 for unlimited
       preference :link_ttl, :integer, :default => 24 # Download link ttl, 0 for unlimited
     end
-    
-    # Global/General Settings for all product downloads
-    # Admin::ConfigurationsController.class_eval do
-    #   before_filter :add_product_download_settings_links, :only => :index
-
-    #   def add_product_download_settings_links
-    #     @extension_links << {:link => admin_downloadable_settings_path, :link_text => t('downloadable_settings'), 
-    #       :description => "Configure general product download settings."}
-    #   end
-    # end
     
     Admin::ProductsController.class_eval do
       after_filter :show_flash, :only => :edit
@@ -58,11 +44,7 @@ class DownloadableExtension < Spree::Extension
       end
     end
     
-    
-    # ----------------------------------------------------------------------------------------------------------
-    # Model class_evals 
-    # ----------------------------------------------------------------------------------------------------------
-    
+
     Product.class_eval do 
       has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
       
@@ -74,7 +56,6 @@ class DownloadableExtension < Spree::Extension
     Variant.class_eval do 
        has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
     end
-    
     
     LineItem.class_eval do 
       before_update :fix_quantity
@@ -104,29 +85,6 @@ class DownloadableExtension < Spree::Extension
         chars = (('a'..'z').to_a + ('0'..'9').to_a) - %w(i o 0 1 l 0)
         (1..size).collect{|a| chars[rand(chars.size)] }.join
       end
-      
-      # Insert download limit to line items for orders
-      # def add_download_limit
-      #   use_global = false
-      #   if !self.variant.nil? and !self.variant.downloadables.empty?
-      #     if self.variant.downloadables.first.download_limit.nil?
-      #       use_global = true
-      #     else
-      #       self.download_limit = self.variant.downloadables.first.download_limit
-      #     end
-      #   elsif !self.variant.product.nil? and !self.variant.product.downloadables.empty?
-      #     if self.variant.product.downloadables.first.download_limit.nil?
-      #       use_global = true
-      #     else
-      #       self.download_limit = self.variant.product.downloadables.first.download_limit
-      #     end
-      #   end
-        
-      #   if((Spree::Config[:download_limit] != 0) && use_global)
-      #     self.download_limit = Spree::Config[:download_limit]
-      #   end
-      # end
-      
     end
     
     OrderMailer.class_eval do
@@ -145,13 +103,6 @@ class DownloadableExtension < Spree::Extension
       end
     end
     
-    # ----------------------------------------------------------------------------------------------------------
-    # End for Models
-    # ----------------------------------------------------------------------------------------------------------
-    
-    # ----------------------------------------------------------------------------------------------------------
-    # Helper class_evals
-    # ----------------------------------------------------------------------------------------------------------
     ApplicationHelper.class_eval do
       # Checks if checkout cart has ONLY downloadable items
       # Used for shipping in helpers/checkouts_helper.rb
@@ -171,33 +122,14 @@ class DownloadableExtension < Spree::Extension
         end
       end
       
-      # def render_links(item, options={:html => true})
-      #   if options[:html] == false
-      #     return t(:download) + ': ' + downloadable_url(item, :s => generate_secret(item))
-      #   elsif !item.product.downloadables.empty?
-      #     return content_tag(:sub,t(:download) + ': ' + link_to("#{item.product.downloadables.first.filename}", downloadable_url(item, :s => generate_secret(item))))
-      #   elsif !item.variant.downloadables.empty?
-      #     return content_tag(:sub,t(:download) + ': ' + link_to("#{item.variant.downloadables.first.filename}", downloadable_url(item, :s => generate_secret(item))))
-      #   end
-      # end
-      
       def generate_secret(record)
         Digest::MD5.hexdigest("#{record.id}-#{ActionController::Base.session_options[:secret]}")
       end
     end
-    # ----------------------------------------------------------------------------------------------------------
-    # End for Helpers 
-    # ----------------------------------------------------------------------------------------------------------   
 
-    # ----------------------------------------------------------------------------------------------------------
-    # Configure Paperclip
-    # ----------------------------------------------------------------------------------------------------------   
     Paperclip.interpolates(:secret) do |attachment, style|
       Digest::MD5.hexdigest("#{attachment.instance.id}-#{ActionController::Base.session_options[:secret]}")
     end
-    # ----------------------------------------------------------------------------------------------------------
-    # End for Paperclip Configuration
-    # ----------------------------------------------------------------------------------------------------------   
   
   end
 end
