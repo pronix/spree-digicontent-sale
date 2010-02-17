@@ -7,7 +7,7 @@ class Downloadable < ProductDownload
   
   before_save :set_title
   after_save :create_zip, :unless => :zipfile?
-                    
+  
   def filename
      return attachment_file_name
   end

@@ -11,7 +11,9 @@
         <td width="300">
     			<%=item.variant.product.name-%> <%= "(" + variant_options(item.variant) + ")" unless item.variant.option_values.empty? %> <br/>	
     			<% if @order.checkout_complete && !request.request_uri.starts_with?("/admin") %>
-    				<%= render_links(item) %> 
+    			  <%= link_to item.product.downloadables.first.filename, 
+                      download_file_url(:secret => item.download_code,
+                                        :filename => item.product.downloadables.first.filename) %> 
     			<% end %>
     		</td>
         <td valign="top"><%= number_to_currency item.price -%></td>

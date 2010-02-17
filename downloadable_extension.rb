@@ -11,6 +11,7 @@ class DownloadableExtension < Spree::Extension
   end
   
   def activate
+    # Use this to pass adress and dilivery step in checkout
     Checkout.state_machines[:state] = StateMachine::Machine.new(Checkout, :initial => 'payment') do
       after_transition :to => 'complete', :do => :complete_order
       before_transition :to => 'complete', :do => :process_payment
@@ -29,7 +30,6 @@ class DownloadableExtension < Spree::Extension
         end
         @object
       end
-      
     end  
 
     
@@ -77,35 +77,55 @@ class DownloadableExtension < Spree::Extension
     
     
     LineItem.class_eval do 
-      before_create :add_download_limit
       before_update :fix_quantity
+      before_create :add_default_staff
       
       # Fuck, it's ugly, but I don't know how use it before_update {self.quantity = 1}
       def fix_quantity
         self.quantity = 1
       end
       
-      # Insert download limit to line items for orders
-      def add_download_limit
-        use_global = false
-        if !self.variant.nil? and !self.variant.downloadables.empty?
-          if self.variant.downloadables.first.download_limit.nil?
-            use_global = true
-          else
-            self.download_limit = self.variant.downloadables.first.download_limit
-          end
-        elsif !self.variant.product.nil? and !self.variant.product.downloadables.empty?
-          if self.variant.product.downloadables.first.download_limit.nil?
-            use_global = true
-          else
-            self.download_limit = self.variant.product.downloadables.first.download_limit
-          end
-        end
-        
-        if((Spree::Config[:download_limit] != 0) && use_global)
-          self.download_limit = Spree::Config[:download_limit]
-        end
+      # Add some staff to line_item when it's create
+      def add_default_staff
+        # if((Spree::Config[:download_limit] != 0) && use_global)
+        #   self.download_limit = Spree::Config[:download_limit]
+        # end
+        self.download_code = random_password
       end
+      
+      def available_link?
+        return true if (self.created_at + Spree::Config[:link_ttl].hours) >= Time.now
+      end
+      
+      private
+      
+      # Generate some random code from files
+      def random_password(size=16)
+        chars = (('a'..'z').to_a + ('0'..'9').to_a) - %w(i o 0 1 l 0)
+        (1..size).collect{|a| chars[rand(chars.size)] }.join
+      end
+      
+      # Insert download limit to line items for orders
+      # def add_download_limit
+      #   use_global = false
+      #   if !self.variant.nil? and !self.variant.downloadables.empty?
+      #     if self.variant.downloadables.first.download_limit.nil?
+      #       use_global = true
+      #     else
+      #       self.download_limit = self.variant.downloadables.first.download_limit
+      #     end
+      #   elsif !self.variant.product.nil? and !self.variant.product.downloadables.empty?
+      #     if self.variant.product.downloadables.first.download_limit.nil?
+      #       use_global = true
+      #     else
+      #       self.download_limit = self.variant.product.downloadables.first.download_limit
+      #     end
+      #   end
+        
+      #   if((Spree::Config[:download_limit] != 0) && use_global)
+      #     self.download_limit = Spree::Config[:download_limit]
+      #   end
+      # end
       
     end
     
@@ -151,15 +171,15 @@ class DownloadableExtension < Spree::Extension
         end
       end
       
-      def render_links(item, options={:html => true})
-        if options[:html] == false
-          return t(:download) + ': ' + downloadable_url(item, :s => generate_secret(item))
-        elsif !item.product.downloadables.empty?
-          return content_tag(:sub,t(:download) + ': ' + link_to("#{item.product.downloadables.first.filename}", downloadable_url(item, :s => generate_secret(item))))
-        elsif !item.variant.downloadables.empty?
-          return content_tag(:sub,t(:download) + ': ' + link_to("#{item.variant.downloadables.first.filename}", downloadable_url(item, :s => generate_secret(item))))
-        end
-      end
+      # def render_links(item, options={:html => true})
+      #   if options[:html] == false
+      #     return t(:download) + ': ' + downloadable_url(item, :s => generate_secret(item))
+      #   elsif !item.product.downloadables.empty?
+      #     return content_tag(:sub,t(:download) + ': ' + link_to("#{item.product.downloadables.first.filename}", downloadable_url(item, :s => generate_secret(item))))
+      #   elsif !item.variant.downloadables.empty?
+      #     return content_tag(:sub,t(:download) + ': ' + link_to("#{item.variant.downloadables.first.filename}", downloadable_url(item, :s => generate_secret(item))))
+      #   end
+      # end
       
       def generate_secret(record)
         Digest::MD5.hexdigest("#{record.id}-#{ActionController::Base.session_options[:secret]}")
