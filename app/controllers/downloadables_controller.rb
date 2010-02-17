@@ -7,7 +7,7 @@ class DownloadablesController < Spree::BaseController
     else
       item = LineItem.find_by_download_code(params[:secret])
       unless item.available_link?
-        flash[:error] = t('time_expired')
+        flash[:error] = t('time_expired_or_link_disable')
         redirect_to root_path and return
       end
       unless item.product.downloadables.find_by_attachment_file_name(params[:filename])
