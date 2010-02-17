@@ -1,8 +1,9 @@
 class DownloadableExtension < Spree::Extension
-  version "1.1"
+  version "1.2"
   description "Downloadable products"
-  url "http://github.com/rocket-rentals/downloadable"
+  url "http://github.com/pronix/spree-digicontent-sale"
   
+  # Need to pack a downloadable file in one zip archive
   def self.require_gems(config)
     config.gem 'rubyzip', :lib => 'zip/zip', :version => '0.9.1'
   end
@@ -68,12 +69,14 @@ class DownloadableExtension < Spree::Extension
       
       # Add some staff to line_item when it's create
       def add_default_staff
+        # Letter add download_limit
         # if((Spree::Config[:download_limit] != 0) && use_global)
         #   self.download_limit = Spree::Config[:download_limit]
         # end
         self.download_code = random_password
       end
       
+      # Check if link is not die
       def available_link?
         return true if (self.created_at + Spree::Config[:link_ttl].hours) >= Time.now
       end
@@ -97,6 +100,7 @@ class DownloadableExtension < Spree::Extension
     
     ShippingMethod.class_eval do
       class << self
+        # Use thid method to shipping_method_id
         def download
           self.find_by_name('Download')
         end
@@ -126,7 +130,8 @@ class DownloadableExtension < Spree::Extension
         Digest::MD5.hexdigest("#{record.id}-#{ActionController::Base.session_options[:secret]}")
       end
     end
-
+    
+    # Paperclip configuration
     Paperclip.interpolates(:secret) do |attachment, style|
       Digest::MD5.hexdigest("#{attachment.instance.id}-#{ActionController::Base.session_options[:secret]}")
     end
