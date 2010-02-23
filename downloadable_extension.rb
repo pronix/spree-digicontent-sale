@@ -9,26 +9,27 @@ class DownloadableExtension < Spree::Extension
   end
   
   def activate
-    # Use this to pass adress and dilivery step in checkout
-    Checkout.state_machines[:state] = StateMachine::Machine.new(Checkout, :initial => 'payment') do
-      after_transition :to => 'complete', :do => :complete_order
-      before_transition :to => 'complete', :do => :process_payment
-      event :next do
-        transition :to => 'complete', :from => 'payment'
-      end
-    end
     
-    CheckoutsController.class_eval do
-      def object
-        return @object if @object
-        @object = parent_object.checkout
-        unless params[:checkout] and params[:checkout][:coupon_code]
-          @object.creditcard ||= Creditcard.new(:month => Date.today.month, :year => Date.today.year)
-          @object.shipping_method ||= ShippingMethod.download
-        end
-        @object
-      end
-    end  
+    # Use this to pass adress and dilivery step in checkout
+    # Checkout.state_machines[:state] = StateMachine::Machine.new(Checkout, :initial => 'payment') do
+    #   after_transition :to => 'complete', :do => :complete_order
+    #   before_transition :to => 'complete', :do => :process_payment
+    #   event :next do
+    #     transition :to => 'complete', :from => 'payment'
+    #   end
+    # end
+    
+    # CheckoutsController.class_eval do
+    #   def object
+    #     return @object if @object
+    #     @object = parent_object.checkout
+    #     unless params[:checkout] and params[:checkout][:coupon_code]
+    #       @object.creditcard ||= Creditcard.new(:month => Date.today.month, :year => Date.today.year)
+    #       @object.shipping_method ||= ShippingMethod.download
+    #     end
+    #     @object
+    #   end
+    # end  
     
     # Need a global peference for download limits
     AppConfiguration.class_eval do 
@@ -36,16 +37,6 @@ class DownloadableExtension < Spree::Extension
       preference :link_ttl, :integer, :default => 24 # Download link ttl, 0 for unlimited
     end
     
-    Admin::ProductsController.class_eval do
-      after_filter :show_flash, :only => :edit
-      
-      # Show notice when product don't hava a attached files
-      def show_flash
-        flash[:notice] = t('product_must_have_attached_file') if @product.downloadables.empty?
-      end
-    end
-    
-
     Product.class_eval do 
       has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
       named_scope :available, :conditions => ['products.available_on <= ?', Time.zone.now]
