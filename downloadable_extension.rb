@@ -18,6 +18,11 @@ class DownloadableExtension < Spree::Extension
     
     Product.class_eval do 
       has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
+      
+      def downlodables?
+        true if !self.downloadables.empty?
+      end
+      
       # named_scope :available, :conditions => ['products.available_on <= ?', Time.zone.now]
     end
     
@@ -36,10 +41,6 @@ class DownloadableExtension < Spree::Extension
       
       # Add some staff to line_item when it's create
       def add_default_staff
-        # Letter add download_limit
-        # if((Spree::Config[:download_limit] != 0) && use_global)
-        #   self.download_limit = Spree::Config[:download_limit]
-        # end
         self.download_code = random_password
       end
       

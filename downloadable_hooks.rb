@@ -1,16 +1,20 @@
 class DownloadableHooks < Spree::ThemeSupport::HookListener
-  # I think this is not necessary
+  # Configuaradion download settings in admin panel
   insert_after :admin_configurations_menu do
     "<tr><td><%= link_to t(\"downloadable_settings\"), admin_downloadable_settings_path %></td><td>
      <%= t(\"downloadable_settings_description\") %></td></tr>"
   end
 
+  # Add downloadable tabs for product
   insert_after :admin_product_tabs, 'admin/shared/download_tabs'
   
-    # When product has a downloadables we render some slightly different
+  # Fix add to cart step. When product has a file we hidden 
+  # count field
+  replace :inside_product_cart_form, 'products/download_cart'
+  
+  # When product has a downloadables we render some slightly different
   # html templates
   # replace :inside_product_cart_form, 'shared/show_price'
-  # replace :cart_item_quantity, 'shared/cart_item_quanity'
   
   # Remove qty in order page
   # remove :cart_item_quantity
