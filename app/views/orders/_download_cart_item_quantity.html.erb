@@ -1,0 +1,5 @@
+<%- if variant.product.downlodables? -%>
+  <%= item_form.hidden_field :quantity, :size => 3 %>
+<%- else -%>
+  <%= item_form.text_field :quantity, :size => 3 %>
+<%- end -%>

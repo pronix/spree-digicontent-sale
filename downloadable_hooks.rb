@@ -11,6 +11,10 @@ class DownloadableHooks < Spree::ThemeSupport::HookListener
   # Fix add to cart step. When product has a file we hidden 
   # count field
   replace :inside_product_cart_form, 'products/download_cart'
+
+  # Fix order edit page. When product have a files we hidden
+  # quantity
+  replace :cart_item_quantity, 'orders/download_cart_item_quantity'
   
   # When product has a downloadables we render some slightly different
   # html templates
