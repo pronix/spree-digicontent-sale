@@ -10,27 +10,6 @@ class DownloadableExtension < Spree::Extension
   
   def activate
     
-    # Use this to pass adress and dilivery step in checkout
-    # Checkout.state_machines[:state] = StateMachine::Machine.new(Checkout, :initial => 'payment') do
-    #   after_transition :to => 'complete', :do => :complete_order
-    #   before_transition :to => 'complete', :do => :process_payment
-    #   event :next do
-    #     transition :to => 'complete', :from => 'payment'
-    #   end
-    # end
-    
-    # CheckoutsController.class_eval do
-    #   def object
-    #     return @object if @object
-    #     @object = parent_object.checkout
-    #     unless params[:checkout] and params[:checkout][:coupon_code]
-    #       @object.creditcard ||= Creditcard.new(:month => Date.today.month, :year => Date.today.year)
-    #       @object.shipping_method ||= ShippingMethod.download
-    #     end
-    #     @object
-    #   end
-    # end  
-    
     # Need a global peference for download limits
     AppConfiguration.class_eval do 
       preference :download_limit, :integer, :default => 0 # 0 for unlimited
@@ -39,7 +18,7 @@ class DownloadableExtension < Spree::Extension
     
     Product.class_eval do 
       has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
-      named_scope :available, :conditions => ['products.available_on <= ?', Time.zone.now]
+      # named_scope :available, :conditions => ['products.available_on <= ?', Time.zone.now]
     end
     
     Variant.class_eval do 

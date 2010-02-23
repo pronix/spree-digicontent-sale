@@ -8,7 +8,8 @@ class DownloadableHooks < Spree::ThemeSupport::HookListener
   # Delete variants from admin product tabs
   # TODO: letter try to many varinants for one product, for example:
   # Original film has a many format - mov, avi and else
-  replace :admin_product_tabs, 'admin/shared/download_tabs'
+  # replace :admin_product_tabs, 'admin/shared/download_tabs'
+  insert_after :admin_product_tabs, 'admin/shared/download_tabs'
   
   # Delete none need field from product admin edit
   replace :admin_product_form_right, 'admin/products/downloable_product_form'
