@@ -1,8 +1,0 @@
-<% Taxonomy.destroy_all %>
-taxonomy_mathematics:
-  id: 5
-  name: Mathematics
-  
-taxonomy_physics:
-  id: 6
-  name: Physics

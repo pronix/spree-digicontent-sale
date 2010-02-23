@@ -15,13 +15,13 @@ class DownloadableHooks < Spree::ThemeSupport::HookListener
   
   # When product has a downloadables we render some slightly different
   # html templates
-  replace :inside_product_cart_form, 'shared/show_price'
-  replace :cart_item_quantity, 'shared/cart_item_quanity'
+  # replace :inside_product_cart_form, 'shared/show_price'
+  # replace :cart_item_quantity, 'shared/cart_item_quanity'
   
   # Remove qty in order page
-  remove :cart_item_quantity
+  # remove :cart_item_quantity
 
   # Replace qty in checkout page
-  replace :order_details_line_item_row, 'shared/order_details_line_item_row'
+  # replace :order_details_line_item_row, 'shared/order_details_line_item_row'
   
 end
