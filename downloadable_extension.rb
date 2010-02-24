@@ -80,10 +80,9 @@ class DownloadableExtension < Spree::Extension
       def change_checkout_shipping
         return if @object.nil? || !@object.try(:only_downloadables?)
         # FIXIT: nedd to change variables in db/default
-        @object.update_attributes(:shipping_method => ShippingMethod.first)
-        @object.update_attributes(:ship_address => Address.first)
-        @object.update_attributes(:bill_address => Address.first)
-        @object.creditcard ||= Creditcard.new(:month => Date.today.month, :year => Date.today.year)
+        @object.shipping_method = ShippingMethod.first
+        @object.ship_address = Address.first
+        @object.bill_address = Address.first
       end
       
 
