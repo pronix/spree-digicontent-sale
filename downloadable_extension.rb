@@ -58,24 +58,7 @@ class DownloadableExtension < Spree::Extension
     end
     
     ApplicationHelper.class_eval do
-      # Checks if checkout cart has ONLY downloadable items
-      # Used for shipping in helpers/checkouts_helper.rb
-      # def only_downloadable
-      #   downloadable_count = 0
-      #   @order.line_items.each do |item|
-      #     if((!item.product.downloadables.empty?) || (!item.variant.downloadables.empty?))
-      #       downloadable_count += 1
-      #     end
-      #   end
-      #   @order.line_items.size == downloadable_count
-      # end
-      
-      # def has_downloadable?
-      #   @order.line_items.each do |item|
-      #     return true if ((!item.product.downloadables.empty?) || (!item.variant.downloadables.empty?))
-      #   end
-      # end
-      
+      # Maybe delete?
       def generate_secret(record)
         Digest::MD5.hexdigest("#{record.id}-#{ActionController::Base.session_options[:secret]}")
       end
