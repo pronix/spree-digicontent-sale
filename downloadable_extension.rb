@@ -49,6 +49,12 @@ class DownloadableExtension < Spree::Extension
       end
     end
     
+    Checkout.class_eval do
+      def only_downloadables?
+        return true if !self.order.line_items.map {|x| x.product.downlodables?}.include?(nil)
+      end
+    end
+    
     OrderMailer.class_eval do
       # For render_links
       helper :application 
@@ -62,7 +68,26 @@ class DownloadableExtension < Spree::Extension
       def generate_secret(record)
         Digest::MD5.hexdigest("#{record.id}-#{ActionController::Base.session_options[:secret]}")
       end
+      
+      def only_downloadable?(checkout)
+        return true if !checkout.order.line_items.map {|x| x.product.downlodables?}.include?(nil)
+      end
     end
+    
+    CheckoutsController.class_eval do
+      before_filter :change_checkout_shipping
+      
+      def change_checkout_shipping
+        return if @object.nil? || !@object.try(:only_downloadables?)
+        # FIXIT: nedd to change variables in db/default
+        @object.update_attributes(:shipping_method => ShippingMethod.first)
+        @object.update_attributes(:ship_address => Address.first)
+        @object.update_attributes(:bill_address => Address.first)
+        @object.creditcard ||= Creditcard.new(:month => Date.today.month, :year => Date.today.year)
+      end
+      
+
+    end  
     
     # Paperclip configuration
     Paperclip.interpolates(:secret) do |attachment, style|
