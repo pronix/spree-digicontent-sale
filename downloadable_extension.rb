@@ -10,6 +10,22 @@ class DownloadableExtension < Spree::Extension
   
   def activate
     
+    ShippingMethod.class_eval do
+      class << self
+        def download
+          find_by_name('Download')
+        end
+      end
+    end
+    
+    Address.class_eval do
+      class << self
+        def download
+          find(66)
+        end
+      end
+    end
+    
     # Need a global peference for download limits
     AppConfiguration.class_eval do 
       preference :download_limit, :integer, :default => 0 # 0 for unlimited
@@ -18,6 +34,8 @@ class DownloadableExtension < Spree::Extension
     
     Product.class_eval do 
       has_many :downloadables, :as => :viewable, :order => :position, :dependent => :destroy
+      
+      # Check if product has a files for download
       def downlodables?
         true if !self.downloadables.empty?
       end
@@ -50,6 +68,7 @@ class DownloadableExtension < Spree::Extension
     end
     
     Checkout.class_eval do
+      # help method to determine that all line_items in checkout are downloadables
       def only_downloadables?
         return true if !self.order.line_items.map {|x| x.product.downlodables?}.include?(nil)
       end
@@ -79,13 +98,11 @@ class DownloadableExtension < Spree::Extension
       
       def change_checkout_shipping
         return if @object.nil? || !@object.try(:only_downloadables?)
-        # FIXIT: nedd to change variables in db/default
-        @object.shipping_method = ShippingMethod.first
-        @object.ship_address = Address.first
-        @object.bill_address = Address.first
+        @object.shipping_method = ShippingMethod.download
+        @object.ship_address = Address.download
+        @object.bill_address = Address.download
       end
       
-
     end  
     
     # Paperclip configuration
