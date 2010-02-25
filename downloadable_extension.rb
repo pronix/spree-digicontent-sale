@@ -26,6 +26,15 @@ class DownloadableExtension < Spree::Extension
       end
     end
     
+    LineItem.class_eval do
+      before_update :fix_quantity_downloadables
+      
+      # If product is downloadables max quanity for it is 1
+      def fix_quantity_downloadables
+        self.quantity = 1 if self.product.downlodables?
+      end
+    end
+    
     # Need a global peference for download limits
     AppConfiguration.class_eval do 
       preference :download_limit, :integer, :default => 0 # 0 for unlimited
