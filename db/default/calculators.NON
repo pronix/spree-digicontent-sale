@@ -1,0 +1,4 @@
+download_method:
+  calculable: download_method
+  calculable_type: ShippingMethod
+  type: Calculator::FlatRate

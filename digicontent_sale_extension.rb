@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class DigicontentSaleExtension < Spree::Extension
   version "1.2"
   description "Downloadable products"
@@ -141,9 +142,10 @@ class DigicontentSaleExtension < Spree::Extension
         # If object is nil don't do anything
         return if @object.nil?
         if @object.try(:only_downloadables?)
-          @object.shipping_method = ShippingMethod.download
+          # Its ugly and special for multishop
+          @object.shipping_method = ShippingMethod.find_by_name('По умолчанию')
           @object.ship_address = Address.download
-          @object.bill_address = Address.downloadables
+          @object.bill_address = Address.download
         end
       end
     end  
