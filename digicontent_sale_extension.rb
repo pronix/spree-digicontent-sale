@@ -1,4 +1,4 @@
-class DownloadableExtension < Spree::Extension
+class DigicontentSaleExtension < Spree::Extension
   version "1.2"
   description "Downloadable products"
   url "http://github.com/pronix/spree-digicontent-sale"

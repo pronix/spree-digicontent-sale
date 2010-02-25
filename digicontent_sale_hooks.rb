@@ -1,4 +1,4 @@
-class DownloadableHooks < Spree::ThemeSupport::HookListener
+class DigicontentSaleHooks < Spree::ThemeSupport::HookListener
   # Configuaradion download settings in admin panel
   insert_after :admin_configurations_menu do
     "<tr><td><%= link_to t(\"downloadable_settings\"), admin_downloadable_settings_path %></td><td>
