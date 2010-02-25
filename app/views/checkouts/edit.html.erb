@@ -4,6 +4,7 @@
 <%- end -%>
 <div id="checkout">
   <h1><%= t("checkout")%></h1>
+  <% @checkout.state = 'payment' if only_downloadable?(@checkout) %>
   <%= checkout_progress %>
 
   <%= error_messages_for :checkout %>

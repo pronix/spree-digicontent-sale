@@ -102,6 +102,38 @@ class DownloadableExtension < Spree::Extension
       end
     end
     
+    CheckoutsHelper.class_eval do
+      
+      # Fix default method, becouse when products only downloadables user don't want
+      # to see address and delivery bars
+      def checkout_progress
+        if only_downloadable?(@checkout)
+          none_use = ['address', 'delivery']
+          checkout_fix = Checkout.state_names.map.delete_if {|x| none_use.include?(x)}
+        else
+          checkout_fix = Checkout.state_names.map
+        end
+        steps = checkout_fix.map do |state|
+          text = t("checkout_steps.#{state}")
+          css_classes = []
+          current_index = Checkout.state_names.index(@checkout.state)
+          state_index = Checkout.state_names.index(state)
+          if state_index < current_index
+            css_classes << 'completed'
+            text = link_to text, edit_order_checkout_url(@order, :step => state)
+          end
+          css_classes << 'next' if state_index == current_index + 1
+          css_classes << 'current' if state == @checkout.state
+          css_classes << 'first' if state_index == 0
+          css_classes << 'last' if state_index == Checkout.state_names.length - 1
+
+          # It'd be nice to have separate classes but combining them with a dash helps out for IE6 which only sees the last class
+          content_tag('li', content_tag('span', text), :class => css_classes.join('-'))
+        end
+        content_tag('ol', steps.join("\n"), :class => 'progress-steps', :id => "checkout-step-#{@checkout.state}") + '<br clear="left" />'
+      end
+    end
+    
     CheckoutsController.class_eval do
       before_filter :change_checkout_shipping
       
