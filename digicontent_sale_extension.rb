@@ -138,12 +138,14 @@ class DigicontentSaleExtension < Spree::Extension
       before_filter :change_checkout_shipping
       
       def change_checkout_shipping
-        return if @object.nil? || !@object.try(:only_downloadables?)
-        @object.shipping_method = ShippingMethod.download
-        @object.ship_address = Address.download
-        @object.bill_address = Address.download
+        # If object is nil don't do anything
+        return if @object.nil?
+        if @object.try(:only_downloadables?)
+          @object.shipping_method = ShippingMethod.download
+          @object.ship_address = Address.download
+          @object.bill_address = Address.downloadables
+        end
       end
-      
     end  
     
     # Paperclip configuration

@@ -1,3 +1,14 @@
+zones_001: 
+  name: EU_VAT
+  id: 1
+  description: Countries that make up the EU VAT zone.
+
+zones_002: 
+  name: North America
+  id: 2
+  description: USA + Canada
+
 zone_internet:
   name: Internet
   description: For all internet
+  id: 3
