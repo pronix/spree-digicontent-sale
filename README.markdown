@@ -12,8 +12,6 @@
 2. rake gems:install
 3. rake db:migrate (or rake db:bootstrap)
 
-
-
 ## License
 
 The MIT License
